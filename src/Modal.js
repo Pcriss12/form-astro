@@ -32,6 +32,7 @@ function ModalApp() {
   function closeModal() {
     setIsOpen(false);
   }
+  
 
   return (
     <div>

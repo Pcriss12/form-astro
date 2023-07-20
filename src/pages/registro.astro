@@ -1,7 +1,7 @@
 ---
 ---
 
-<form id="formAstro">
+<form id="formAstro" method="post">
   <label>
     Username:
     <input type="text" name="username" id="username" class="inputSize block"/>
@@ -29,16 +29,18 @@
 
   <label>
     Confirm Password:
-    <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block"/>
-    <span id="idConfirmPass" class="block "></span>
+    <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block "/>
+    <span id="idConfirmPass" class="block marginbottom-3S0"></span>
   </label>
   
-  <input type="submit" value="Send"  />
+  <label>
+    <input type="submit" value="Send" class="buttonSize btn-primary"  />
+  </label>
 </form>
 
 <script is:inline>
  document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("formAstro").addEventListener('submit', validarFormulario); 
+  document.getElementById("formAstro").addEventListener('click', validarFormulario); 
   document.getElementById("username").addEventListener('change', validarUser);
   document.getElementById("email").addEventListener('change', validarEmail);
   document.getElementById("password").addEventListener('change', validarPass);
@@ -67,7 +69,7 @@ function validarPass(){
   if (password.length < 6) {
     document.getElementById('idPass').innerHTML = "Please enter 6 or more characters.";
     return;
-  }else{
+  }else if(password.length > 6){
     document.getElementById('idPass').innerHTML = "";
   }
 }
@@ -84,9 +86,41 @@ function validarCPass(){
 }
 function validarFormulario(evento) {
   evento.preventDefault();
-  validarUser();
-  
-  this.submit();
+  var username = document.getElementById('username').value;
+  if(username.length == 0) {
+    document.getElementById('idName').innerHTML = "Please enter Username.";
+    return;
+  }else{
+    document.getElementById('idName').innerHTML = "";
+  }
+
+  var email = document.getElementById('email').value;
+  if (email.length < 6) {
+    document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
+    return;
+  }else{
+    document.getElementById('idEmail').innerHTML = "";
+  }
+
+
+  var password = document.getElementById('password').value;
+  if (password.length < 6) {
+    document.getElementById('idPass').innerHTML = "Please enter 6 or more characters.";
+    return;
+  }else if(password.length > 6){
+    document.getElementById('idPass').innerHTML = "";
+  }
+
+  var password = document.getElementById('password').value;
+  var confirmPassword = document.getElementById('confirmPassword').value;
+  if (password != confirmPassword ) {
+    document.getElementById('idConfirmPass').innerHTML = "Password and Confirm Password does not match.";
+    return;
+  } else{
+    document.getElementById('idConfirmPass').innerHTML = "";
+  }
+ 
+  document.getElementById('formAstro').submit();
 }
 function checkPass() {
   var x = document.getElementById("password");

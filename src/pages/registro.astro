@@ -1,62 +1,126 @@
 ---
 ---
 
-<form id="formAstro">
+<form id="formAstro" method="post">
   <label>
     Username:
-    <input type="text" name="username" id="username" />
+    <input type="text" name="username" id="username" class="inputSize block"/>
+    <span id="idName" class="block marginbottom-20"></span>
   </label>
-  <span id="idName"></span>
+  
 
   <label>
     Email:
-    <input type="email" name="email" id="email" />
+    <input type="email" name="email" id="email" class="inputSize block"/>
+    <span id="idEmail" class="block marginbottom-20"></span>
   </label>
-  <span id="idEmail"></span>
+  
 
   <label>
     Password:
-    <input type="password" name="password" id="password"/>
+    <input type="password" name="password" id="password" class="inputSize block"/>
+    <span id="idPass" class="block"></span>
   </label>
-  <span id="idPass"></span>
-  <input type="checkbox" onclick="checkPass()">
+  
+  <div class="block marginBotton-20">
+    <input type="checkbox" onclick="checkPass()">
+    <p class="inline-block ">Show password</p>
+  </div>
+
   <label>
     Confirm Password:
-    <input type="password" name="confirmPassword" id="confirmPassword"/>
+    <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block "/>
+    <span id="idConfirmPass" class="block marginbottom-3S0"></span>
   </label>
-  <span id="idConfirmPass"></span>
-  <input type="submit" value="Send"  />
+  
+  <label>
+    <input type="submit" value="Send" class="buttonSize btn-primary"  />
+  </label>
 </form>
 
 <script is:inline>
  document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("formAstro").addEventListener('submit', validarFormulario); 
+  document.getElementById("formAstro").addEventListener('click', validarFormulario); 
+  document.getElementById("username").addEventListener('change', validarUser);
+  document.getElementById("email").addEventListener('change', validarEmail);
+  document.getElementById("password").addEventListener('change', validarPass);
+  document.getElementById("confirmPassword").addEventListener('change', validarCPass);
 });
-
+function validarUser() {
+  var username = document.getElementById('username').value;
+  if(username.length == 0) {
+    document.getElementById('idName').innerHTML = "Please enter Username.";
+    return;
+  }else{
+    document.getElementById('idName').innerHTML = "";
+  }
+}
+function validarEmail(){
+  var email = document.getElementById('email').value;
+  if (email.length < 6) {
+    document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
+    return;
+  }else{
+    document.getElementById('idEmail').innerHTML = "";
+  }
+}
+function validarPass(){
+  var password = document.getElementById('password').value;
+  if (password.length < 6) {
+    document.getElementById('idPass').innerHTML = "Please enter 6 or more characters.";
+    return;
+  }else if(password.length > 6){
+    document.getElementById('idPass').innerHTML = "";
+  }
+}
+function validarCPass(){
+  
+  var password = document.getElementById('password').value;
+  var confirmPassword = document.getElementById('confirmPassword').value;
+  if (password != confirmPassword ) {
+    document.getElementById('idConfirmPass').innerHTML = "Password and Confirm Password does not match.";
+    return;
+  } else{
+    document.getElementById('idConfirmPass').innerHTML = "";
+  }
+}
 function validarFormulario(evento) {
   evento.preventDefault();
   var username = document.getElementById('username').value;
   if(username.length == 0) {
     document.getElementById('idName').innerHTML = "Please enter Username.";
     return;
+  }else{
+    document.getElementById('idName').innerHTML = "";
   }
+
   var email = document.getElementById('email').value;
   if (email.length < 6) {
     document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
     return;
+  }else{
+    document.getElementById('idEmail').innerHTML = "";
   }
+
+
+  var password = document.getElementById('password').value;
+  if (password.length < 6) {
+    document.getElementById('idPass').innerHTML = "Please enter 6 or more characters.";
+    return;
+  }else if(password.length > 6){
+    document.getElementById('idPass').innerHTML = "";
+  }
+
   var password = document.getElementById('password').value;
   var confirmPassword = document.getElementById('confirmPassword').value;
-  if (password.length < 6) {
-    document.getElementById('idPass').innerHTML = "Please enter Password.";
-    return;
-  }
   if (password != confirmPassword ) {
     document.getElementById('idConfirmPass').innerHTML = "Password and Confirm Password does not match.";
     return;
-  } 
-  
-  this.submit();
+  } else{
+    document.getElementById('idConfirmPass').innerHTML = "";
+  }
+ 
+  document.getElementById('formAstro').submit();
 }
 function checkPass() {
   var x = document.getElementById("password");

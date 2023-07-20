@@ -50,18 +50,23 @@ function validarUser() {
   var username = document.getElementById('username').value;
   if(username.length == 0) {
     document.getElementById('idName').innerHTML = "Please enter Username.";
+    document.getElementById('username').classList.add("inputError");
     return;
   }else{
     document.getElementById('idName').innerHTML = "";
+    document.getElementById('username').classList.remove("inputError");
+    document.getElementById('username').classList.add("inputSucess");
   }
 }
 function validarEmail(){
   var email = document.getElementById('email').value;
   if (email.length < 6) {
     document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
+    document.getElementById('email').classList.add("inputError");
     return;
   }else{
     document.getElementById('idEmail').innerHTML = "";
+    document.getElementById('email').classList.add("inputError");
   }
 }
 function validarPass(){
@@ -89,17 +94,22 @@ function validarFormulario(evento) {
   var username = document.getElementById('username').value;
   if(username.length == 0) {
     document.getElementById('idName').innerHTML = "Please enter Username.";
+    document.getElementById('username').classList.add("inputError");
     return;
   }else{
     document.getElementById('idName').innerHTML = "";
+    document.getElementById('username').classList.remove("inputError");
+    document.getElementById('username').classList.add("inputSucess");
   }
 
   var email = document.getElementById('email').value;
   if (email.length < 6) {
     document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
+    document.getElementById('email').classList.add("inputError");
     return;
   }else{
     document.getElementById('idEmail').innerHTML = "";
+    document.getElementById('email').classList.add("inputError");
   }
 
 

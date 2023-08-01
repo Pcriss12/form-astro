@@ -1,25 +1,26 @@
 ---
 ---
 
-<form id="formAstro" method="post">
+<form id="formAstro" >
+  
   <label>
     Username:
-    <input type="text" name="username" id="username" class="inputSize block"/>
-    <span id="idName" class="block marginbottom-20"></span>
+    <input type="text" name="username" id="username" class="inputSize block marginbottom-20"/>
+    <small></small>
   </label>
   
 
   <label>
     Email:
     <input type="email" name="email" id="email" class="inputSize block"/>
-    <span id="idEmail" class="block marginbottom-20"></span>
+    <small></small>
   </label>
   
 
   <label>
     Password:
     <input type="password" name="password" id="password" class="inputSize block"/>
-    <span id="idPass" class="block"></span>
+    <small></small>
   </label>
   
   <div class="block marginBotton-20">
@@ -30,104 +31,71 @@
   <label>
     Confirm Password:
     <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block "/>
-    <span id="idConfirmPass" class="block marginbottom-3S0"></span>
+    <small></small>
   </label>
   
   <label>
-    <input type="submit" value="Send" class="buttonSize btn-primary"  />
+    <input type="submit" value="Send" class="buttonSize btn-primary" />
   </label>
 </form>
 
 <script is:inline>
- document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("formAstro").addEventListener('click', validarFormulario); 
-  document.getElementById("username").addEventListener('change', validarUser);
-  document.getElementById("email").addEventListener('change', validarEmail);
-  document.getElementById("password").addEventListener('change', validarPass);
-  document.getElementById("confirmPassword").addEventListener('change', validarCPass);
-});
-function validarUser() {
-  var username = document.getElementById('username').value;
-  if(username.length == 0) {
-    document.getElementById('idName').innerHTML = "Please enter Username.";
-    return;
-  }else{
-    document.getElementById('idName').innerHTML = "";
-  }
-}
-function validarEmail(){
-  var email = document.getElementById('email').value;
-  if (email.length < 6) {
-    document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
-    return;
-  }else{
-    document.getElementById('idEmail').innerHTML = "";
-  }
-}
-function validarPass(){
-  var password = document.getElementById('password').value;
-  if (password.length < 6) {
-    document.getElementById('idPass').innerHTML = "Please enter 6 or more characters.";
-    return;
-  }else if(password.length > 6){
-    document.getElementById('idPass').innerHTML = "";
-  }
-}
-function validarCPass(){
-  
-  var password = document.getElementById('password').value;
-  var confirmPassword = document.getElementById('confirmPassword').value;
-  if (password != confirmPassword ) {
-    document.getElementById('idConfirmPass').innerHTML = "Password and Confirm Password does not match.";
-    return;
-  } else{
-    document.getElementById('idConfirmPass').innerHTML = "";
-  }
-}
-function validarFormulario(evento) {
-  evento.preventDefault();
-  var username = document.getElementById('username').value;
-  if(username.length == 0) {
-    document.getElementById('idName').innerHTML = "Please enter Username.";
-    return;
-  }else{
-    document.getElementById('idName').innerHTML = "";
-  }
+const userNameField = document.querySelector("[name=username]");
+const emailField = document.querySelector("[name=email]");
+const passwordField = document.querySelector("[name=password]");
+const confirmPasswordField = document.querySelector("[name=confirmPassword]");
 
-  var email = document.getElementById('email').value;
-  if (email.length < 6) {
-    document.getElementById('idEmail').innerHTML = "Please enter Email Adress.";
-    return;
+const validateEmptyField = (message, e) => {
+  const field = e.target;
+  const fieldValue = e.target.value;
+  if (fieldValue.trim().length == 0) {
+    field.classList.add("inputError");
+    field.classList.remove("marginbottom-20");
+    field.nextElementSibling.classList.add("block");
+    field.nextElementSibling.classList.add("marginbottom-20");
+    field.nextElementSibling.innerText = message;
   }else{
-    document.getElementById('idEmail').innerHTML = "";
-  }
-
-
-  var password = document.getElementById('password').value;
-  if (password.length < 6) {
-    document.getElementById('idPass').innerHTML = "Please enter 6 or more characters.";
-    return;
-  }else if(password.length > 6){
-    document.getElementById('idPass').innerHTML = "";
-  }
-
-  var password = document.getElementById('password').value;
-  var confirmPassword = document.getElementById('confirmPassword').value;
-  if (password != confirmPassword ) {
-    document.getElementById('idConfirmPass').innerHTML = "Password and Confirm Password does not match.";
-    return;
-  } else{
-    document.getElementById('idConfirmPass').innerHTML = "";
-  }
- 
-  document.getElementById('formAstro').submit();
-}
-function checkPass() {
-  var x = document.getElementById("password");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
+    field.classList.remove("inputError");
+    field.classList.add("marginbottom-20");
+    field.nextElementSibling.classList.remove("block");
+    field.nextElementSibling.classList.remove("marginbottom-20");
+    field.nextElementSibling.innerText = "";
   }
 }
+
+const validateEmailFormat = e => {
+  const field = e.target;
+  const fieldValue = e.target.value;
+  const regex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/);
+  if (fieldValue.trim().length == 5 && !regex.test(fieldValue)) {
+    field.classList.add("inputError");
+    field.nextElementSibling.classList.add("block");
+    field.nextElementSibling.innerText = "Please enter a valid email";
+  }else{
+    field.classList.remove("inputError");
+    field.nextElementSibling.classList.remove("block");
+    field.nextElementSibling.innerText = "";
+  }
+}
+const validatePasswordConform = e => {
+    const field = e.target;
+    if (passwordField != confirmPasswordField || confirmPasswordField != passwordField) {
+      field.classList.add("inputError");
+      field.nextElementSibling.classList.add("block");
+      field.nextElementSibling.innerText = "Password and Confirm Password does not match.";
+    } else{
+      field.classList.remove("inputError");
+      field.nextElementSibling.classList.remove("block");
+      field.nextElementSibling.innerText = "";
+    }
+}
+
+userNameField.addEventListener("blur", (e) => validateEmptyField("Username is required", e));
+emailField.addEventListener("blur", (e) => validateEmptyField("Email is required", e));
+passwordField.addEventListener("blur", (e) => validateEmptyField("Password is required", e));
+confirmPasswordField.addEventListener("blur", (e) => validateEmptyField("Confirm your password is required", e));
+
+emailField.addEventListener("input", validateEmailFormat);
+confirmPasswordField.addEventListener("input", validatePasswordConform);
+
 </script>

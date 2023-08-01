@@ -28,28 +28,30 @@
     margin-bottom: 40px;
 }
 
-span{
+small{
     color: red;
     font-size: 14px;
     font-weight: 400;
 }
-input{
+
+input[type=text], input[type=password],input[type=email]{
     border: 2px solid;
     border-color: lightgray;
     border-radius: 3px;
 }
-input:focus-visible, input:focus{
+
+input[type=text]:focus-visible, input[type=password]:focus-visible, input[type=email]:focus-visible, 
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus{
     border: 2px solid lightblue !important;
     background-color: white !important;
     outline: lightblue;
 }
 .inputError{
-    border: 1px solid;
-    border-color: lightcoral;
+    border-color: lightcoral !important;
+    box-shadow: 0 0 10px lightcoral;
 }
 .inputSuccess{
-    border: 1px solid;
-    border-color: lightgreen;
+    border-color: lightgreen ;
 }
 .inputSize{
     width: 300px;

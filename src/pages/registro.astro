@@ -5,32 +5,28 @@
   
   <label>
     Username:
-    <input type="text" name="username" id="username" class="inputSize block marginbottom-20"/>
+    <input type="text" name="username" id="username" class="inputSize block marginBottom-20"/>
     <small></small>
   </label>
   
 
   <label>
     Email:
-    <input type="email" name="email" id="email" class="inputSize block"/>
+    <input type="email" name="email" id="email" class="inputSize block marginBottom-20"/>
     <small></small>
   </label>
   
 
   <label>
     Password:
-    <input type="password" name="password" id="password" class="inputSize block"/>
+    <input type="password" name="password" id="password" class="inputSize block marginBottom-20"/>
     <small></small>
   </label>
+  <i class="far fa-eye icon icon-margin-44" id="togglePassword"></i>
   
-  <div class="block marginBotton-20">
-    <input type="checkbox" onclick="checkPass()">
-    <p class="inline-block ">Show password</p>
-  </div>
-
   <label>
     Confirm Password:
-    <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block "/>
+    <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block marginBottom-20"/>
     <small></small>
   </label>
   
@@ -44,23 +40,30 @@ const userNameField = document.querySelector("[name=username]");
 const emailField = document.querySelector("[name=email]");
 const passwordField = document.querySelector("[name=password]");
 const confirmPasswordField = document.querySelector("[name=confirmPassword]");
+const togglePassword = document.querySelector("#togglePassword");
 
 const validateEmptyField = (message, e) => {
   const field = e.target;
   const fieldValue = e.target.value;
   if (fieldValue.trim().length == 0) {
     field.classList.add("inputError");
-    field.classList.remove("marginbottom-20");
+    field.classList.remove("marginBottom-20");
     field.nextElementSibling.classList.add("block");
-    field.nextElementSibling.classList.add("marginbottom-20");
+    field.nextElementSibling.classList.add("marginBottom-20");
     field.nextElementSibling.innerText = message;
   }else{
     field.classList.remove("inputError");
-    field.classList.add("marginbottom-20");
+    field.classList.add("marginBottom-20");
     field.nextElementSibling.classList.remove("block");
-    field.nextElementSibling.classList.remove("marginbottom-20");
+    field.nextElementSibling.classList.remove("marginBottom-20");
     field.nextElementSibling.innerText = "";
   }
+  if (passwordField.classList.contains("inputError")) {
+      togglePassword.classList.add("icon-margin-60");
+    }else{
+      togglePassword.classList.remove("icon-margin-60");
+      togglePassword.classList.add("icon-margin-44");
+    }
 }
 
 const validateEmailFormat = e => {
@@ -89,6 +92,18 @@ const validatePasswordConform = e => {
       field.nextElementSibling.innerText = "";
     }
 }
+
+togglePassword.addEventListener("click", function () {
+     // toggle the type attribute
+     const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+     passwordField.setAttribute("type", type);
+            
+    // toggle the icon
+    this.classList.toggle("fa-eye-slash");
+
+    
+});
+
 
 userNameField.addEventListener("blur", (e) => validateEmptyField("Username is required", e));
 emailField.addEventListener("blur", (e) => validateEmptyField("Email is required", e));

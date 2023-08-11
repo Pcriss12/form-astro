@@ -1,25 +1,22 @@
 ---
 ---
 
-<form id="formAstro" >
-  
+<form id="formRegister" method="post" >
   <label>
     Username:
-    <input type="text" name="username" id="username" class="inputSize block marginBottom-20"/>
+    <input type="text" name="username" id="username" class="inputSize block marginBottom-20" required/>
     <small></small>
-  </label>
-  
+  </label> 
 
   <label>
     Email:
-    <input type="email" name="email" id="email" class="inputSize block marginBottom-20"/>
+    <input type="email" name="email" id="email" class="inputSize block marginBottom-20" required/>
     <small></small>
   </label>
   
-
   <label>
     Password:
-    <input type="password" name="password" id="password" class="inputSize block marginBottom-20"/>
+    <input type="password" name="password" id="password" class="inputSize block marginBottom-20" required/>
     <small></small>
   </label>
   <i class="far fa-eye icon icon-margin-44" id="togglePassword"></i>
@@ -31,68 +28,94 @@
   </label>
   
   <label>
-    <input type="submit" value="Send" class="buttonSize btn-primary" />
+    <input type="submit" value="Send" id="sendButton" class="buttonSize btn-primary" required/>
   </label>
 </form>
-
+<p id = "output"> </p>
 <script is:inline>
 const userNameField = document.querySelector("[name=username]");
 const emailField = document.querySelector("[name=email]");
 const passwordField = document.querySelector("[name=password]");
 const confirmPasswordField = document.querySelector("[name=confirmPassword]");
-const togglePassword = document.querySelector("#togglePassword");
 
-const validateEmptyField = (message, e) => {
-  const field = e.target;
-  const fieldValue = e.target.value;
-  if (fieldValue.trim().length == 0) {
+
+/* Errors validation
+.j*/
+const setErrors = (message, field, isError = true) => {
+  if (isError) {
     field.classList.add("inputError");
     field.classList.remove("marginBottom-20");
     field.nextElementSibling.classList.add("block");
     field.nextElementSibling.classList.add("marginBottom-20");
     field.nextElementSibling.innerText = message;
-  }else{
+    field.classList.remove("inputSuccess");
+  } else {
     field.classList.remove("inputError");
     field.classList.add("marginBottom-20");
     field.nextElementSibling.classList.remove("block");
     field.nextElementSibling.classList.remove("marginBottom-20");
     field.nextElementSibling.innerText = "";
+    field.classList.add("inputSuccess");
   }
   if (passwordField.classList.contains("inputError")) {
       togglePassword.classList.add("icon-margin-60");
+      togglePassword.classList.remove("icon-margin-44");
     }else{
       togglePassword.classList.remove("icon-margin-60");
       togglePassword.classList.add("icon-margin-44");
     }
 }
 
+/*Inputs validate function*/
+const validateEmptyField = (message, e) => {
+  const field = e.target;
+  const fieldValue = e.target.value;
+  if (fieldValue.trim().length == 0) {
+    setErrors(message, field);
+  }else{
+    setErrors("", field, false);
+
+  }
+  
+  
+}
+/*Email validate function regular expression*/
 const validateEmailFormat = e => {
   const field = e.target;
   const fieldValue = e.target.value;
-  const regex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/);
-  if (fieldValue.trim().length == 5 && !regex.test(fieldValue)) {
-    field.classList.add("inputError");
-    field.nextElementSibling.classList.add("block");
-    field.nextElementSibling.innerText = "Please enter a valid email";
+  const regex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  
+  if (fieldValue.trim().length > 5 && !regex.test(fieldValue)) {
+    setErrors("Please enter a valid email", field);
+    
   }else{
-    field.classList.remove("inputError");
-    field.nextElementSibling.classList.remove("block");
-    field.nextElementSibling.innerText = "";
+    setErrors("", field, false);
   }
 }
+/*Password validate fection regular expression*/
+const validatePasswordFormat = e => {
+  const field = e.target;
+  const fieldValue = e.target.value;
+  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+    if(regex.test(fieldValue) === false) {
+      setErrors("Password pattern incorrect.", field);
+    } else {
+      setErrors("", field, false);
+    }
+
+}
+/*Confirm password function*/
 const validatePasswordConform = e => {
     const field = e.target;
-    if (passwordField != confirmPasswordField || confirmPasswordField != passwordField) {
-      field.classList.add("inputError");
-      field.nextElementSibling.classList.add("block");
-      field.nextElementSibling.innerText = "Password and Confirm Password does not match.";
+    if (passwordField != confirmPasswordField) {
+      setErrors("Password and Confirm Password does not match.", field);
     } else{
-      field.classList.remove("inputError");
-      field.nextElementSibling.classList.remove("block");
-      field.nextElementSibling.innerText = "";
+      setErrors("", field, false);
     }
 }
 
+/*Show password function*/
+const togglePassword = document.getElementById("togglePassword");
 togglePassword.addEventListener("click", function () {
      // toggle the type attribute
      const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
@@ -104,13 +127,22 @@ togglePassword.addEventListener("click", function () {
     
 });
 
+let output = document.getElementById('output');
+const sendForm = document.getElementById("formRegister");
+sendForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  sendForm.reset();
+  output.innerHTML += "The form is resetted successfully!"
+
+});
 
 userNameField.addEventListener("blur", (e) => validateEmptyField("Username is required", e));
 emailField.addEventListener("blur", (e) => validateEmptyField("Email is required", e));
 passwordField.addEventListener("blur", (e) => validateEmptyField("Password is required", e));
-confirmPasswordField.addEventListener("blur", (e) => validateEmptyField("Confirm your password is required", e));
+confirmPasswordField.addEventListener("blur", (e) => validateEmptyField("Confirm password is required", e));
 
 emailField.addEventListener("input", validateEmailFormat);
+passwordField.addEventListener("input", validatePasswordFormat);
 confirmPasswordField.addEventListener("input", validatePasswordConform);
 
 </script>

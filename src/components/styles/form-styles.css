@@ -1,5 +1,5 @@
 
-#formAstro{
+#formRegister{
     width: 100%;
     margin: 0 auto;
     min-width: 307px;
@@ -62,12 +62,16 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus{
     background-color: white !important;
     outline: lightblue;
 }
+
 .inputError{
+    background-color: white !important;
     border-color: lightcoral !important;
     box-shadow: 0 0 10px lightcoral;
 }
 .inputSuccess{
-    border-color: lightgreen ;
+    border-color: lightgreen !important;
+    box-shadow: 0 0 10px lightgreen;
+    background-color: white !important;
 }
 .inputSize{
     width: 300px;

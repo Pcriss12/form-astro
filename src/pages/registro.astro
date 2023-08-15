@@ -1,46 +1,74 @@
 ---
 ---
-
+<!-- HTML form structure -->
 <form id="formRegister" method="post" >
-  <label>
-    Username:
-    <input type="text" name="username" id="username" class="inputSize block marginBottom-20" required/>
-    <small></small>
-  </label> 
+  <fieldset>
+    <!-- Username input -->
+    <label for="username">
+      <span aria-hidden="true">Username:</span>
+      <input type="text" name="username" id="username" class="inputSize block marginBottom-20" aria-label="Username" required/>
+      <small aria-live="assertive" aria-atomic="true"></small>
+    </label> 
 
-  <label>
-    Email:
-    <input type="email" name="email" id="email" class="inputSize block marginBottom-20" required/>
-    <small></small>
-  </label>
-  
-  <label>
-    Password:
-    <input type="password" name="password" id="password" class="inputSize block marginBottom-20" required/>
-    <small></small>
-  </label>
-  <i class="far fa-eye icon icon-margin-44" id="togglePassword"></i>
-  
-  <label>
-    Confirm Password:
-    <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block marginBottom-20"/>
-    <small></small>
-  </label>
-  
-  <label>
-    <input type="submit" value="Send" id="sendButton" class="buttonSize btn-primary" required/>
-  </label>
+  <!-- Email input -->
+    <label for="email">
+      <span aria-hidden="true">Email:</span>
+      <input type="email" name="email" id="email" class="inputSize block marginBottom-20" aria-label="Email"required/>
+      <small aria-live="assertive" aria-atomic="true"></small>
+    </label>
+
+    <!-- Password input -->
+    <label for="password">
+      <span aria-hidden="true">Password:</span>
+      <input type="password" name="password" id="password" class="inputSize block marginBottom-20" aria-label="Password" required/>
+      <small aria-live="assertive" aria-atomic="true"></small>
+    </label>
+
+     <!-- Toggle password visibility button -->
+      <i class="far fa-eye icon icon-margin-44" id="togglePassword"  role="button" aria-label="Toggle password visibility"></i>
+
+      <!-- Confirm Password input -->
+    <label for="confirmPassword">
+      <span aria-hidden="true">Confirm Password:</span>
+      <input type="password" name="confirmPassword" id="confirmPassword" class="inputSize block marginBottom-20" aria-label="Confirm Password" required/>
+      <small aria-live="assertive" aria-atomic="true"></small>
+    </label>
+
+    <!-- Submit button -->
+    <label>
+      <input type="submit" value="Send" id="sendButton" class="buttonSize btn-primary" aria-label="Submit" />
+    </label>
+  </fieldset>
 </form>
-<p id = "output"> </p>
+
+<!-- Password strength and validation messages -->
+<div id="message">
+  <h3>Password must contain the following:</h3>
+  <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+  <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+  <p id="number" class="invalid">A <b>number</b></p>
+  <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+</div>
+<!-- Placeholder for output messages -->
+<p id="output"></p>
+
+<!-- Modal HTML -->
+<div id="successModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <p>Form submitted successfully!</p>
+  </div>
+</div>
+
 <script is:inline>
+// Query the DOM for input fields and toggle button
 const userNameField = document.querySelector("[name=username]");
 const emailField = document.querySelector("[name=email]");
 const passwordField = document.querySelector("[name=password]");
 const confirmPasswordField = document.querySelector("[name=confirmPassword]");
+const togglePassword = document.getElementById("togglePassword");
 
-
-/* Errors validation
-.j*/
+// Function to handle validation errors and success
 const setErrors = (message, field, isError = true) => {
   if (isError) {
     field.classList.add("inputError");
@@ -66,83 +94,210 @@ const setErrors = (message, field, isError = true) => {
     }
 }
 
-/*Inputs validate function*/
-const validateEmptyField = (message, e) => {
-  const field = e.target;
-  const fieldValue = e.target.value;
-  if (fieldValue.trim().length == 0) {
-    setErrors(message, field);
-  }else{
-    setErrors("", field, false);
-
-  }
-  
-  
-}
-/*Email validate function regular expression*/
-const validateEmailFormat = e => {
-  const field = e.target;
-  const fieldValue = e.target.value;
-  const regex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-  
-  if (fieldValue.trim().length > 5 && !regex.test(fieldValue)) {
-    setErrors("Please enter a valid email", field);
+// Function to validate text inputs
+const validateInputText = (message, field) => {
+    const fieldValue = field.value;
+    const regex = /^[A-Za-z\s]+$/;
+    const isValid = regex.test(fieldValue);
     
-  }else{
-    setErrors("", field, false);
+    setErrors(isValid ? "" : message, field, !isValid);
+    
+    return isValid;
   }
-}
-/*Password validate fection regular expression*/
-const validatePasswordFormat = e => {
-  const field = e.target;
-  const fieldValue = e.target.value;
-  const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
-    if(regex.test(fieldValue) === false) {
-      setErrors("Password pattern incorrect.", field);
-    } else {
-      setErrors("", field, false);
-    }
+    
+// Function to validate email format
+const validateEmailFormat = field => {
+    const fieldValue = field.value;
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const isValid = regex.test(fieldValue);
+    
+    setErrors(isValid ? "" : "Please enter a valid email", field, !isValid);
+    
+    return isValid;
+  }
+  
+// Function to validate password format and strength
+const validatePasswordFormat = field => {
+    const fieldValue = field.value;
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+    const isValid = regex.test(fieldValue);
+    
+    setErrors(isValid ? "" : "Password is not strong enough", field, !isValid);
+    
+    return isValid;
+  };
 
-}
-/*Confirm password function*/
-const validatePasswordConform = e => {
-    const field = e.target;
-    if (passwordField != confirmPasswordField) {
-      setErrors("Password and Confirm Password does not match.", field);
-    } else{
-      setErrors("", field, false);
-    }
-}
+  passwordField.addEventListener("input", () => validatePasswordFormat(passwordField));
 
-/*Show password function*/
-const togglePassword = document.getElementById("togglePassword");
+
+// Function to validate confirmed password
+const validatePasswordConform = () => {
+  const passwordValue = passwordField.value;
+  const confirmPasswordValue = confirmPasswordField.value;
+
+  if (!confirmPasswordValue) {
+    setErrors("Please confirm your password.", confirmPasswordField);
+    return false;
+  } else if (passwordValue !== confirmPasswordValue) {
+    setErrors("Passwords do not match.", confirmPasswordField);
+    return false;
+  } else {
+    setErrors("", confirmPasswordField, false);
+    return true;
+  }
+};
+
+// Event listener to toggle password visibility
+
 togglePassword.addEventListener("click", function () {
-     // toggle the type attribute
-     const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
-     passwordField.setAttribute("type", type);
-            
-    // toggle the icon
-    this.classList.toggle("fa-eye-slash");
-
-    
+  const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+  passwordField.setAttribute("type", type);
+  this.classList.toggle("fa-eye-slash");
 });
 
-let output = document.getElementById('output');
-const sendForm = document.getElementById("formRegister");
-sendForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  sendForm.reset();
-  output.innerHTML += "The form is resetted successfully!"
+// Add event listeners for input validation and interactions
+const fieldsListerners = [userNameField, emailField, passwordField, confirmPasswordField];
+fieldsListerners.forEach((field) => {
+  field.addEventListener("blur", () => {
+    if (field === emailField) {
+      validateEmailFormat(field);
+    } else if (field === passwordField) {
+      validatePasswordFormat(field);
+      validatePasswordStrength(field.value);
+    } else if (field === confirmPasswordField) {
+      validatePasswordConform();
+    } else {
+      validateInputText("Username is required", field);
+    }
+  });
 
+  field.addEventListener("input", () => {
+    if (field === emailField) {
+      validateEmailFormat(field);
+    } else if (field === passwordField) {
+      validatePasswordFormat(field);
+      validatePasswordStrength(field.value);
+    } else if (field === confirmPasswordField) {
+      validatePasswordConform();
+    }
+  });
 });
 
-userNameField.addEventListener("blur", (e) => validateEmptyField("Username is required", e));
-emailField.addEventListener("blur", (e) => validateEmptyField("Email is required", e));
-passwordField.addEventListener("blur", (e) => validateEmptyField("Password is required", e));
-confirmPasswordField.addEventListener("blur", (e) => validateEmptyField("Confirm password is required", e));
+// Show password strength messages when focused
+passwordField.addEventListener("focus", function() {
+  document.getElementById("message").classList.add("visible");
+});
 
-emailField.addEventListener("input", validateEmailFormat);
-passwordField.addEventListener("input", validatePasswordFormat);
-confirmPasswordField.addEventListener("input", validatePasswordConform);
+// Hide password strength messages when blurred
+passwordField.addEventListener("blur", function() {
+  document.getElementById("message").classList.remove("visible");
+});
+
+const validatePasswordStrength = (passwordValue) => {
+  const letter = document.getElementById("letter");
+  const capital = document.getElementById("capital");
+  const number = document.getElementById("number");
+  const length = document.getElementById("length");
+
+  // Validate lowercase letters
+  const lowerCaseLetters = /[a-z]/g;
+  if (passwordValue.match(lowerCaseLetters)) {
+    letter.classList.remove("invalid");
+    letter.classList.add("valid");
+  } else {
+    letter.classList.remove("valid");
+    letter.classList.add("invalid");
+  }
+
+  // Validate capital letters
+  const upperCaseLetters = /[A-Z]/g;
+  if (passwordValue.match(upperCaseLetters)) {
+    capital.classList.remove("invalid");
+    capital.classList.add("valid");
+  } else {
+    capital.classList.remove("valid");
+    capital.classList.add("invalid");
+  }
+
+  // Validate numbers
+  const numbers = /[0-9]/g;
+  if (passwordValue.match(numbers)) {
+    number.classList.remove("invalid");
+    number.classList.add("valid");
+  } else {
+    number.classList.remove("valid");
+    number.classList.add("invalid");
+  }
+
+  // Validate length
+  if (passwordValue.length >= 8) {
+    length.classList.remove("invalid");
+    length.classList.add("valid");
+  } else {
+    length.classList.remove("valid");
+    length.classList.add("invalid");
+  }
+};
+  // Attach the submit event listener
+  const sendForm = document.getElementById("formRegister");
+  const fields = [userNameField, emailField, passwordField, confirmPasswordField];
+  sendForm.addEventListener("submit", e => {
+  e.preventDefault(); // Prevent the default form submission behavior
+
+  let hasErrors = false; // Flag to track if there are validation errors
+
+  // Validate username
+  if (!validateInputText("Username is required", userNameField)) {
+    hasErrors = true;
+  }
+
+  // Validate email
+  if (!validateEmailFormat(emailField)) {
+    hasErrors = true;
+  }
+
+  // Validate password format
+  if (!validatePasswordFormat(passwordField)) {
+    hasErrors = true;
+  }
+
+  // Validate password confirmation
+  if (!validatePasswordConform()) {
+    hasErrors = true;
+  }
+
+  // If there are no validation errors, proceed with submission
+  if (!hasErrors) {
+    // Clear input fields and show success message
+    fields.forEach(field => {
+      field.value = "";
+      field.classList.remove("inputError", "inputSuccess");
+      field.nextElementSibling.innerText = "";
+      field.nextElementSibling.classList.remove("block", "marginBottom-20");
+    });
+
+    showSuccessModal();
+  }
+});
+
+
+  // Function to show the success modal
+  const showSuccessModal = () => {
+  const modal = document.getElementById("successModal");
+  const closeModal = document.getElementById("closeModal");
+
+  modal.style.display = "block";
+
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+};
+
 
 </script>

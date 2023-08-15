@@ -184,7 +184,12 @@ label span{
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
   }
-  
+  .modal-content h3{
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+  }
+
   /* Close Button */
   .close {
     color: #aaa;
